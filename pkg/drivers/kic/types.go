@@ -23,11 +23,13 @@ import (
 )
 
 const (
-	// Version is the current version of kic
+	// Version is the current version of kic -- also used as image tag
 	Version = "v0.0.36-1673540226-15630"
 
-	// SHA of the kic base image
-	baseImageSHA = "03c9592728381094cbd0ff9603f75ae6b485dd7a390c3e35f02ae5ec10f2f3ad"
+	// SHA of compressed image, used as a registry reference -- more reliable than a tag
+	distributionDigest = "03c9592728381094cbd0ff9603f75ae6b485dd7a390c3e35f02ae5ec10f2f3ad"
+	// SHA of SHAS of individual image layers -- content addressable
+	ContentDigest = "243d3449b30fd2029b685cafa1191f13fbce109441e8c74001ff370d444b1927"
 	// The name of the GCR kicbase repository
 	gcrRepo = "gcr.io/k8s-minikube/kicbase-builds"
 	// The name of the Dockerhub kicbase repository
@@ -36,13 +38,13 @@ const (
 
 var (
 	// BaseImage is the base image is used to spin up kic containers. it uses same base-image as kind.
-	BaseImage = fmt.Sprintf("%s:%s@sha256:%s", gcrRepo, Version, baseImageSHA)
+	BaseImage = fmt.Sprintf("%s:%s@sha256:%s", gcrRepo, Version, distributionDigest)
 
 	// FallbackImages are backup base images in case gcr isn't available
 	FallbackImages = []string{
 		// the fallback of BaseImage in case gcr.io is not available. stored in docker hub
 		// same image is push to https://github.com/kicbase/stable
-		fmt.Sprintf("%s:%s@sha256:%s", dockerhubRepo, Version, baseImageSHA),
+		fmt.Sprintf("%s:%s@sha256:%s", dockerhubRepo, Version, distributionDigest),
 		// try without sha because #11068
 		fmt.Sprintf("%s:%s", gcrRepo, Version),
 		fmt.Sprintf("%s:%s", dockerhubRepo, Version),
