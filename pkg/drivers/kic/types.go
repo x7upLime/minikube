@@ -28,8 +28,6 @@ const (
 
 	// SHA of compressed image, used as a registry reference -- more reliable than a tag
 	distributionDigest = "03c9592728381094cbd0ff9603f75ae6b485dd7a390c3e35f02ae5ec10f2f3ad"
-	// SHA of SHAS of individual image layers -- content addressable
-	ContentDigest = "243d3449b30fd2029b685cafa1191f13fbce109441e8c74001ff370d444b1927"
 	// The name of the GCR kicbase repository
 	gcrRepo = "gcr.io/k8s-minikube/kicbase-builds"
 	// The name of the Dockerhub kicbase repository
