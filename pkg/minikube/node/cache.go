@@ -177,7 +177,7 @@ func beginDownloadKicBaseImage(g *errgroup.Group, cc *config.ClusterConfig, down
 				return nil
 			}
 
-			out.Step(style.ISODownload, "Loading KicDriver with base image ...")
+			out.Step(style.Waiting, "Loading KicDriver with base image ...")
 			// if we don't have the cached image in KicDriver.. we're loading it
 			if cc.Driver == driver.Podman {
 				return fmt.Errorf("not yet implemented, see issue #8426")
