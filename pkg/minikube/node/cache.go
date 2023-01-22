@@ -168,6 +168,9 @@ func beginDownloadKicBaseImage(g *errgroup.Group, cc *config.ClusterConfig, down
 				return err
 			}
 			stored, err := isImageInKicDriver(cc.Driver, cd)
+			if err != nil {
+				return err
+			}
 			if stored {
 				klog.Infof("%s already present in KicDriver", img)
 				finalImg = img
