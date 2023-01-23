@@ -122,7 +122,6 @@ func beginDownloadKicBaseImage(g *errgroup.Group, cc *config.ClusterConfig, down
 
 	klog.Infof("Beginning downloading kic base image for %s with %s", cc.Driver, cc.KubernetesConfig.ContainerRuntime)
 	register.Reg.SetStep(register.PullingBaseImage)
-	out.Step(style.Pulling, "Pulling base image to minikube cache ...")
 	g.Go(func() error {
 		baseImg := cc.KicBaseImage
 		if baseImg == kic.BaseImage && len(cc.KubernetesConfig.ImageRepository) != 0 {
@@ -152,6 +151,7 @@ func beginDownloadKicBaseImage(g *errgroup.Group, cc *config.ClusterConfig, down
 			// if we have it already.. we're good
 			// takes into account the --download-only flag
 			if !cached || downloadOnly {
+				out.Step(style.Pulling, "Pulling base image to minikube cache ...")
 				klog.Infof("Downloading %s to minikube cache", img)
 				err = pullImageToMinikubeCache(img)
 				if err == nil && downloadOnly {
