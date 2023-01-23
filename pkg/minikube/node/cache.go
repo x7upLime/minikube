@@ -178,7 +178,7 @@ func beginDownloadKicBaseImage(g *errgroup.Group, cc *config.ClusterConfig, down
 
 			out.Step(style.Waiting, "Loading KicDriver with base image ...")
 			// if we don't have the cached image in KicDriver.. we're loading it
-			if err := download.CacheToKicDriver(cc.Driver, img); err != nil {
+			if err := download.CacheToKicDriver(cc.Driver, img); err == nil {
 				klog.Infof("successfully loaded and using %s from cached tarball", img)
 				return nil
 			}
