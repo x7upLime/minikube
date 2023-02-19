@@ -202,6 +202,7 @@ func validateAccessDirect(ctx context.Context, t *testing.T, profile string) {
 	url := fmt.Sprintf("http://%s", hostname)
 
 	fetch := func() error {
+		t.Logf("[!!] Trying to contact %s\n", url)
 		h := &http.Client{Timeout: time.Second * 10}
 		resp, err := h.Get(url)
 		if err != nil {
