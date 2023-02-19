@@ -81,6 +81,9 @@ func validateTunnelCmd(ctx context.Context, t *testing.T, profile string) {
 	})
 }
 
+// NOTE:
+// this is dangerous. This test will skip even if ifconfig is not present.
+// even if sudo was set correctly
 // checkRoutePassword skips tunnel test if sudo password required for route
 func checkRoutePassword(t *testing.T) {
 	if !KicDriver() && runtime.GOOS != "windows" {
@@ -138,6 +141,7 @@ func validateServiceStable(ctx context.Context, t *testing.T, profile string) {
 	}
 	checkRoutePassword(t)
 	setupSucceeded := t.Run("Setup", func(t *testing.T) {
+		t.Logf("[!!] Entering setup......")
 		client, err := kapi.Client(profile)
 		if err != nil {
 			t.Fatalf("failed to get Kubernetes client for %q: %v", profile, err)
@@ -168,12 +172,15 @@ func validateServiceStable(ctx context.Context, t *testing.T, profile string) {
 		err := wait.PollImmediate(5*time.Second, Minutes(3), func() (bool, error) {
 			rr, err := Run(t, exec.CommandContext(ctx, "kubectl", "--context", profile, "get", "svc", "nginx-svc", "-o", "jsonpath={.status.loadBalancer.ingress[0].ip}"))
 			if err != nil {
+				t.Logf("[!!] Error encountered while running kubectl get svc")
 				return false, err
 			}
 			if len(rr.Stdout.String()) > 0 {
+				t.Logf("[!!] We good...")
 				hostname = rr.Stdout.String()
 				return true, nil
 			}
+			t.Logf("[!!] tf happened here? Like err == nil but len(stdout) <= 0???")
 			return false, nil
 		})
 		if err != nil {
@@ -202,7 +209,6 @@ func validateAccessDirect(ctx context.Context, t *testing.T, profile string) {
 	url := fmt.Sprintf("http://%s", hostname)
 
 	fetch := func() error {
-		t.Logf("[!!] Trying to contact %s\n", url)
 		h := &http.Client{Timeout: time.Second * 10}
 		resp, err := h.Get(url)
 		if err != nil {
@@ -219,6 +225,8 @@ func validateAccessDirect(ctx context.Context, t *testing.T, profile string) {
 		return nil
 	}
 
+	t.Logf("[!!] Just before retry.Expo() call....")
+	t.Logf("[!!] Trying to contact this %s\n", url)
 	// Check if the nginx service can be accessed
 	if err := retry.Expo(fetch, 3*time.Second, Minutes(2), 13); err != nil {
 		t.Errorf("failed to hit nginx at %q: %v", url, err)
