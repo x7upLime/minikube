@@ -170,7 +170,15 @@ func validateServiceStable(ctx context.Context, t *testing.T, profile string) {
 		}
 		// Wait until the nginx-svc has a loadbalancer ingress IP
 		err := wait.PollImmediate(5*time.Second, Minutes(3), func() (bool, error) {
-			rr, err := Run(t, exec.CommandContext(ctx, "kubectl", "--context", profile, "get", "svc", "nginx-svc", "-o", "jsonpath={.status.loadBalancer.ingress[0].ip}"))
+
+			//test run
+			rr, err := Run(t, exec.CommandContext(ctx, "kubectl", "--context", profile, "get", "svc", "nginx-svc"))
+
+			t.Logf("TESTRUN...")
+			t.Logf("NGINX-SVC--STDOUT: %s\n", rr.Stdout.String())
+			t.Logf("NGINX-SVC--STDERR: %s\n", rr.Stderr.String())
+
+			rr, err = Run(t, exec.CommandContext(ctx, "kubectl", "--context", profile, "get", "svc", "nginx-svc", "-o", "jsonpath={.status.loadBalancer.ingress[0].ip}"))
 
 			t.Logf("NGINX-SVC--STDOUT: %s\n", rr.Stdout.String())
 			t.Logf("NGINX-SVC--STDERR: %s\n", rr.Stderr.String())
