@@ -677,20 +677,24 @@ func trySigKillProcess(pid int) error {
 // doesPIDBelongToMinikube tries to find the process with that PID
 // and checks if the executable name is "minikube"
 func doesPIDBelongToMinikube(pid int) (bool, error) {
+	fmt.Printf("\ndoesPIDBelongToMinikube()\n...")
 	entry, err := ps.FindProcess(pid)
 	if err != nil {
+		fmt.Printf("\t[!] There is an error.\n")
 		return false, errors.Wrap(err, fmt.Sprintf("ps.FindProcess for %d", pid))
 	}
 	if entry == nil {
-		klog.Infof("Process not found. pid %d", pid)
+		fmt.Printf("Process not found. pid %d", pid)
 		return false, nil
 	}
 
-	klog.Infof("Found process %d", pid)
+	fmt.Printf("Found process %d", pid)
 	if entry.Executable() != "minikube" {
+		fmt.Printf("Process don't belong to us")
 		return false, nil
 	}
 
+	fmt.Printf("All good.. returning true and nil err")
 	return true, nil
 }
 
