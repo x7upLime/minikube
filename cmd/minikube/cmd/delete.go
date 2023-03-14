@@ -690,7 +690,7 @@ func doesPIDBelongToMinikube(pid int) (bool, error) {
 
 	fmt.Printf("Found process %d", pid)
 	if entry.Executable() != "minikube" {
-		fmt.Printf("Process don't belong to us")
+		fmt.Printf("Process don't belong to us; It belongs to ====== %s\n\n", entry.Executable())
 		return false, nil
 	}
 

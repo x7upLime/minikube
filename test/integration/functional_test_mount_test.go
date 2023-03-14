@@ -324,7 +324,7 @@ func validateMountCmd(ctx context.Context, t *testing.T, profile string) { // no
 				t.Logf("\t[*] Finding %s...\n", mnt)
 				rr, err := Run(t, exec.CommandContext(ctx, Target(), "-p", profile, "ssh", "findmnt -T", mnt))
 				if err != nil {
-					t.Logf("\t\t!!!! Found err\n")
+					t.Logf("\t\t!!!! Found err: %s\n", err)
 					// if something weird has happened from previous tests..
 					// this could at least spare us some waiting
 					if strings.Contains(rr.Stdout.String(), fmt.Sprintf("Profile \"%s\" not found.", profile)) {
