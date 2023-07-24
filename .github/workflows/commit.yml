@@ -140,8 +140,6 @@ jobs:
           CONTAINERD_INSTALL_DIR="/usr/local"
           curl -L https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz --output containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz
           sudo tar -xf containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz -C $CONTAINERD_INSTALL_DIR
-          curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service --output /etc/systemd/system/containerd.service
-          sudo systemctl daemon-reload
 
           sudo mkdir /etc/containerd
           cat <<EOF | sudo tee /etc/containerd/config.toml
@@ -153,6 +151,10 @@ jobs:
           EOF
 
           sudo systemctl list-unit-files
+          sudo systemctl unmask containerd.service
+          curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service --output /etc/systemd/system/containerd.service
+          cat /etc/systemd/system/containerd.service
+          sudo systemctl daemon-reload
           sudo systemctl enable --now containerd.service
           
       - name: Install gopogh
