@@ -150,10 +150,8 @@ jobs:
           oom_score = 0
           EOF
 
-          sudo systemctl list-unit-files
           sudo systemctl unmask containerd.service
           sudo curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service --output /etc/systemd/system/containerd.service
-          cat /etc/systemd/system/containerd.service
           sudo systemctl daemon-reload
           sudo systemctl enable --now containerd.service
           
