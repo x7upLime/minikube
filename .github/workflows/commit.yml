@@ -152,6 +152,7 @@ jobs:
           oom_score = 0
           EOF
 
+          sudo systemctl unmask containerd.service
           sudo systemctl enable --now containerd.service
           
       - name: Install gopogh
