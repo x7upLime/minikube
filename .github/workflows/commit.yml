@@ -143,7 +143,7 @@ jobs:
           curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service --output /etc/systemd/system/containerd.service
 
           sudo mkdir /etc/containerd
-          sudo cat <<EOF | tee /etc/containerd/config.toml
+          cat <<EOF | sudo tee /etc/containerd/config.toml
           version = 2
           
           root = "/var/lib/containerd"
