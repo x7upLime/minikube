@@ -141,7 +141,7 @@ jobs:
           curl -L https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz --output containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz
           sudo tar -xf containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz -C $CONTAINERD_INSTALL_DIR
           curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service --output /etc/systemd/system/containerd.service
-          systemctl daemon-reload
+          sudo systemctl daemon-reload
 
           sudo mkdir /etc/containerd
           cat <<EOF | sudo tee /etc/containerd/config.toml
