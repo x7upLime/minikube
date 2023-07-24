@@ -121,6 +121,8 @@ jobs:
           sudo apt-get -qq -y install conntrack
           sudo apt-get -qq -y install socat
           sudo apt-get -qq -y install runc
+
+          which containerd
           
           CRICTL_VERSION="v1.17.0"
           curl -L https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz --output crictl-${CRICTL_VERSION}-linux-amd64.tar.gz
@@ -141,6 +143,7 @@ jobs:
           curl -L https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz --output containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz
           sudo tar -xf containerd-$CONTAINERD_VERSION-$CONTAINERD_OS-$CONTAINERD_ARCH.tar.gz -C $CONTAINERD_INSTALL_DIR
           curl -L https://raw.githubusercontent.com/containerd/containerd/main/containerd.service --output /etc/systemd/system/containerd.service
+          systemctl daemon-reload
 
           sudo mkdir /etc/containerd
           cat <<EOF | sudo tee /etc/containerd/config.toml
@@ -150,7 +153,9 @@ jobs:
           state = "/run/containerd"
           oom_score = 0
           EOF
-          
+
+          sudo systemctl status containerd.service
+          sudo systemctl unmaks containerd.service
           sudo systemctl enable --now containerd.service
           
       - name: Install gopogh
